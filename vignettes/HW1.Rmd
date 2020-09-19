@@ -1,0 +1,31 @@
+---
+title: "HW1"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{HW1}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(bis557)
+```
+
+Summary for HW1:\
+I firstly built the linear_model function to compute linear regression, solving for beta, the coefficients. This function allows users to enter the linear formula they want to solve ("form" in the function), and their choosing dataset ("dat" in the function). By entering these inputs, the function will return the coefficients with the same format if using lm() function. And I used the 'test-linear-model.r' file and the 'lm_patho' dataset (for tougher case) to check my function, I get no error and no warning.\
+Then, I built the gradient_descent function to compute linear regression with gradient descent method. This function allows users to enter the linear formula they want to solve ("form" in the function), their choosing dataset ("dat" in the function), given factor (gamma) that can update beta, given maximum iteration times to allow the loop to exit, and given difference between previous sum of residuals and new sum of residuals to allow the loop to exit. By entering these inputs, the function will determine if the independent variables in the dataset have collinearity problem or not. If it does, the function will proceed with linear_model. If it does not, the function will continue the gradient descent method. Finally, the function will return the coefficients. I revised the 'test-linear-model.r' file to make it fit for the gradient_descent function. Then, I used the 'test-gradient-descent.r' file and the 'lm_patho' dataset (for tougher case) to check my function, I get no error and no warning.\
+
+
+
+
+
+
+
+

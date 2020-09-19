@@ -1,0 +1,23 @@
+Package: bis557
+Type: Package
+Title: BIS557 
+Version: 0.0.1
+Author: Zichen Zhao <zichen.zhao@yale.edu>
+Maintainer: Zichen Zhao <zichen.zhao@yale.edu>
+Description: Functions that solve for linear regression model.
+License: LGPL (>= 2.1)
+Encoding: UTF-8
+LazyData: true
+Imports:
+    stats,
+    dplyr,
+    ggplot2,
+    devtools,
+Depends: 
+    R (>= 2.10)
+Suggests: 
+    testthat,
+    knitr,
+    rmarkdown
+RoxygenNote: 7.1.1
+VignetteBuilder: knitr
