@@ -16,9 +16,11 @@ knitr::opts_chunk$set(
 # bis557
 
 <!-- badges: start -->
+[![Travis build status](https://travis-ci.com/Z1chenZhao/bis557.svg?branch=master)](https://travis-ci.com/Z1chenZhao/bis557)
+[![Codecov test coverage](https://codecov.io/gh/Z1chenZhao/bis557/branch/master/graph/badge.svg)](https://codecov.io/gh/Z1chenZhao/bis557?branch=master)
 <!-- badges: end -->
 
-The goal of bis557 is to ...
+The goal of bis557 is to write R functions for homework assignments
 
 ## Installation
 
@@ -30,25 +32,10 @@ install.packages("bis557")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
 library(bis557)
 ## basic example code
+data(iris)
+linear_model(Sepal.Length ~ ., iris)
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub!
