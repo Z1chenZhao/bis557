@@ -1,0 +1,143 @@
+---
+title: "homework-2"
+author: "Zichen Zhao"
+Date: "10/01/2020"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{homework-2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(casl)
+library(bis557)
+library(dplyr)
+library(foreach)
+```
+1. CASL 2.11 Exercises problem number 5. Include the write up in your homework-2 vignette.\
+Consider the simple regression model with only a scalar $x$ and intercept:
+$$y = \beta_0 + \beta_1 \times x$$
+Using the explicit formula for the inverse of a 2-by-2 matrix, write down the least squares estimators for $\hat{\beta_0}$ and $\hat{\beta_1}$.\
+
+Write the simple regression model in a matrix form, where 
+$$Y=\begin{pmatrix}
+y_{1} \\
+y_{2} \\
+\dots \\
+y_{n}
+\end{pmatrix}$$
+$$X=\begin{pmatrix}
+1 & x_{1} \\
+2 & x_{2} \\
+\dots & \dots\\
+n & x_{n}
+\end{pmatrix}$$
+$$\beta=\begin{pmatrix}
+\beta_0 \\
+\beta_1 
+\end{pmatrix}$$
+We know that $\beta=(X^\prime X)^{-1}X^\prime Y$, where
+$$X^\prime Y=\begin{pmatrix}
+1 & 2 & \dots & n \\
+x_{1} & x_{2} &\dots & x_{n} 
+\end{pmatrix} \times \begin{pmatrix}
+y_{1} \\
+y_{2} \\
+\dots \\
+y_{n}
+\end{pmatrix}=\begin{pmatrix}
+\sum iy_{i} \\
+\sum x_{i}y_{i} 
+\end{pmatrix}$$
+We need to find the inverse of $X^\prime X$:\
+Knowing that:
+$$X^\prime X=\begin{pmatrix}
+\sum i^2 & \sum ix_{i} \\
+\sum ix_{i} & \sum x_{i}^2 \\
+\end{pmatrix}$$
+Finding the inverse:
+$$(X^\prime X)^{-1}=\frac{1}{\sum i^2\sum ix_{i}^2-(\sum x_{i})^2}\begin{pmatrix}
+\sum x_{i}^2 & -\sum ix_{i} \\
+-\sum ix_{i} & \sum i^2 \\
+\end{pmatrix}$$
+Then, we can write down the least suqares estimator $$\beta=\begin{pmatrix}
+\beta_0 \\
+\beta_1 
+\end{pmatrix}$$ as:
+$$
+\beta=(X^\prime X)^{-1}X^\prime Y=\frac{1}{\sum i^2\sum ix_{i}^2-(\sum x_{i})^2}\begin{pmatrix}
+\sum x_{i}^2 & -\sum ix_{i} \\
+-\sum ix_{i} & \sum i^2 \\
+\end{pmatrix}
+\begin{pmatrix}
+\sum iy_{i} \\
+\sum x_{i}y_{i} 
+\end{pmatrix}
+=\frac{1}{\sum i^2\sum ix_{i}^2-(\sum x_{i})^2}\begin{pmatrix}
+\sum x_{i}^2\sum iy_{i} - \sum i x_{i}\sum x_{i}y_{i} \\
+-\sum i x_{i}\sum iy_{i} + \sum i^2\sum x_{i}y_{i}
+\end{pmatrix}
+$$
+
+2. Implement a new function fitting the OLS model using gradient descent that calculates the penalty based on the out-of-sample accuracy. Create test code. How does it compare to the OLS model? Include the comparison in your "homework-2" vignette.\
+
+```{r}
+data("iris")
+a <- osm_gradient_descent(Sepal.Length ~ ., iris)$coefficients
+b <- gradient_descent(Sepal.Length ~ ., iris)$coefficients
+c <- lm(Sepal.Length ~ ., iris)$coefficients
+comparison <- data.frame(cbind(a, b, c))
+names(comparison) <- c("OSM", "GD", "LM")
+comparison
+```
+
+
+
+3. Implement a ridge regression function taking into account colinear (or nearly colinear) regression variables. Create test code for it. Show that it works in your homework-2 vignette.\
+```{r}
+data("iris")
+iris$duplicate <- iris$Sepal.Width
+ridge_regression(Sepal.Length ~ ., iris, lam = 0)
+```
+
+
+4. Implement your own method and testing for optimizing the ridge parameter $\lambda$. Show that it works in your homework-2 vignette.\
+
+```{r}
+data("mtcars")
+optimization_lambda(mpg~., mtcars)
+```
+
+
+5. Consider the LASSO penalty
+$$
+\frac{1}{2n} ||Y - X \beta||_2^2 + \lambda ||\beta||_1.
+$$
+Show that if $|X_j^TY| \leq n \lambda$, then $\widehat \beta^{\text{LASSO}}$ must be zero.\
+We know that 
+$$L(\beta) = \frac{1}{2n} ||Y - X \beta||_2^2 + \lambda ||\beta||_1$$
+Taking the derivative with respect to $\beta$ and let it equal to 0:
+$$\frac{dL(\beta)}{d\beta}=\frac{1}{n}(-X^T)(Y-X\beta)+\lambda=0$$
+Then, we can get
+$$-X^TY+X^TX\hat{\beta}+n\lambda=0\longrightarrow \hat{\beta} = (X^TX)^{-1}(X^TY-n\lambda)$$
+As $(X^TX)^{-1}$ is always greater than $0$ and we are given $|X_j^TY| \leq n \lambda$, we can get $\hat{\beta} < 0$.\
+Thus, $\hat{\beta}$ must be $0$ because $\hat{\beta}$ will be set to $0$ if the function has a negative result ($\hat{\beta} < 0$). So $\widehat \beta^{\text{LASSO}}$ must be zero.
+
+
+
+
+
+
+
+
+
+
+
