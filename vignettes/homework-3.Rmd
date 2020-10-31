@@ -1,0 +1,82 @@
+---
+title: "homework-3"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{homework-3}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(bis557)
+library(tibble)
+library(tidyverse)
+```
+
+1. CASL 5.8 Exercise number 2:\
+The Hessian matrix can be written as:
+$$H(l)=X^t\cdot D\cdot X$$
+where $D$ is a diagonal matrix with elements
+$$D_{i,i}=p_i\cdot(1-p_i)$$
+Now, we need to generate a matrix $X$ and probabilities $p$ such that the linear Hessian ($X^tX$) is well-conditioned but the logistic variation is not:\
+```{r}
+#Create X
+X <- cbind(c(1,2,3,4), c(-2,-1.65,-0.65,1.55))
+#The Hessian matrix is
+XtX <- t(X) %*% X
+kappa(XtX)
+#Introducing D
+p <- 1/(1+exp(-X%*%c(0.5,2)))
+D <- diag(x=as.vector(p), 4, 4)
+XtDX <- t(X) %*% D %*% X
+kappa(XtDX)
+```
+Thus, this linear Hessian ($X^tX$) is well-conditioned but the logistic variation is not.\
+\
+2. For constant step wise (using function GLM_gradient_constant with class example):
+```{r}
+pd <- tibble(offers = c(rep(0, 50), rep(1, 30), rep(2, 10), rep(3, 7), rep(4, 3)),
+             division = sample(c("A", "B", "C"), 100, replace = TRUE),
+             exam = c(runif(30, 60, 80), runif(50, 40, 90), runif(20, 70, 85)))
+
+fit_ref <- glm(offers ~ division + exam, family = "poisson", data = pd)
+
+Y <- matrix(pd$offers, ncol = 1)
+X <- model.matrix(offers ~ division + exam, data = pd)
+beta <- c(0.1, 0.7, 1, 1.5)
+fit <- GLM_gradient_constant(X, Y, mu_fun = function(eta) 1/(1+exp(-eta)))
+fit
+```
+
+For standard adaptive update momentum (using function GLM_gradient_adaptive with class example):\
+```{r}
+pd <- tibble(offers = c(rep(0, 50), rep(1, 30), rep(2, 10), rep(3, 7), rep(4, 3)),
+             division = sample(c("A", "B", "C"), 100, replace = TRUE),
+             exam = c(runif(30, 60, 80), runif(50, 40, 90), runif(20, 70, 85)))
+
+fit_ref <- glm(offers ~ division + exam, family = "poisson", data = pd)
+
+Y <- matrix(pd$offers, ncol = 1)
+X <- model.matrix(offers ~ division + exam, data = pd)
+beta <- c(0.1, 0.7, 1, 1.5)
+fit <- GLM_gradient_adaptive(X, Y, mu_fun = function(eta) 1/(1+exp(-eta)), mom = 0.2)
+fit
+```
+Based on above two results, we can observe that standard adaptive update momentum one generates better results compared with the constant step wise one.\
+\
+3. For testing the model generalizing logistic regression to accommodate more than two classes, I used the iris data with Species as the response variable.
+```{r}
+data(iris)
+X <- model.matrix(Species ~ ., data = iris)
+Y <- iris$Species
+logistic_regression_multiclasses(X, Y, mu_fun = function(eta) 1/(1+exp(-eta)), maxit = 1e5, tol = 1e-5)
+```
+
+
