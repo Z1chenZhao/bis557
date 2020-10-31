@@ -13,11 +13,12 @@ Imports:
     dplyr,
     ggplot2,
     devtools,
-    casl,
     foreach,
     doParallel,
     rsample,
-    magrittr
+    magrittr,
+    tidyverse,
+    tibble
 Depends: 
     R (>= 2.10)
 Suggests: 
