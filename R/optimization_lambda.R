@@ -26,7 +26,7 @@ optimization_lambda <- function (form, dat, folds = 10, lambdas = seq(0, 1, 0.1)
   #Calculate mse for each lambda
   i <- NULL
   `.`<- NULL
-  lam <- NULL
+  lambda <- NULL
   mse.l <- foreach(lambda = lambdas, .combine = rbind) %dopar% {
     foreach(i = seq_len(nrow(folds)), .combine = c) %do% {
       mse(

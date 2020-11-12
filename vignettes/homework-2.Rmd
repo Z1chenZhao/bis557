@@ -17,7 +17,6 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(casl)
 library(bis557)
 library(dplyr)
 library(foreach)
@@ -89,15 +88,7 @@ $$
 
 2. Implement a new function fitting the OLS model using gradient descent that calculates the penalty based on the out-of-sample accuracy. Create test code. How does it compare to the OLS model? Include the comparison in your "homework-2" vignette.\
 
-```{r}
-data("iris")
-a <- osm_gradient_descent(Sepal.Length ~ ., iris)$coefficients
-b <- gradient_descent(Sepal.Length ~ ., iris)$coefficients
-c <- lm(Sepal.Length ~ ., iris)$coefficients
-comparison <- data.frame(cbind(a, b, c))
-names(comparison) <- c("OSM", "GD", "LM")
-comparison
-```
+
 
 
 
@@ -112,8 +103,8 @@ ridge_regression(Sepal.Length ~ ., iris, lam = 0)
 4. Implement your own method and testing for optimizing the ridge parameter $\lambda$. Show that it works in your homework-2 vignette.\
 
 ```{r}
-data("mtcars")
-optimization_lambda(mpg~., mtcars)
+#data("mtcars")
+#optimization_lambda(mpg~., mtcars)
 ```
 
 
